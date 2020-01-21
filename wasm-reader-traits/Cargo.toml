@@ -3,6 +3,8 @@ name = "wasm-reader-traits"
 version = "0.1.0"
 authors = ["Jef <jackefransham@gmail.com>"]
 edition = "2018"
+description = "Helper traits for wasm-reader (split to allow using derive macros in the main crate)"
+license = "Unlicense"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

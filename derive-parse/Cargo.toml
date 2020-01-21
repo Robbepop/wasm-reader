@@ -3,6 +3,8 @@ name = "derive-parse"
 version = "0.1.0"
 authors = ["Jef <jackefransham@gmail.com>"]
 edition = "2018"
+description = "Derive traits for wasm-reader"
+license = "Unlicense"
 
 [lib]
 proc-macro = true
