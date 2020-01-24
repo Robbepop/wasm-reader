@@ -459,25 +459,37 @@ mod impl_parser_hack {
                 0x03 => FixedReader::<u8>::new().map(|flags| Operator::AtomicFence { flags }),
                 0x10 => AlignedMemargParser(2).map(|memarg| Operator::I32AtomicLoad { memarg }),
                 0x11 => AlignedMemargParser(3).map(|memarg| Operator::I64AtomicLoad { memarg }),
-                0x12 => AlignedMemargParser(0).map(|memarg| Operator::I32AtomicLoad8U { memarg }),
+                0x12 => {
+                    MemoryImmediate::parser().map(|memarg| Operator::I32AtomicLoad8U { memarg })
+                }
                 0x13 => AlignedMemargParser(1).map(|memarg| Operator::I32AtomicLoad16U { memarg }),
-                0x14 => AlignedMemargParser(0).map(|memarg| Operator::I64AtomicLoad8U { memarg }),
+                0x14 => {
+                    MemoryImmediate::parser().map(|memarg| Operator::I64AtomicLoad8U { memarg })
+                }
                 0x15 => AlignedMemargParser(1).map(|memarg| Operator::I64AtomicLoad16U { memarg }),
                 0x16 => AlignedMemargParser(2).map(|memarg| Operator::I64AtomicLoad32U { memarg }),
                 0x17 => AlignedMemargParser(2).map(|memarg| Operator::I32AtomicStore { memarg }),
                 0x18 => AlignedMemargParser(3).map(|memarg| Operator::I64AtomicStore { memarg }),
-                0x19 => AlignedMemargParser(0).map(|memarg| Operator::I32AtomicStore8 { memarg }),
+                0x19 => {
+                    MemoryImmediate::parser().map(|memarg| Operator::I32AtomicStore8 { memarg })
+                }
                 0x1a => AlignedMemargParser(1).map(|memarg| Operator::I32AtomicStore16 { memarg }),
-                0x1b => AlignedMemargParser(0).map(|memarg| Operator::I64AtomicStore8 { memarg }),
+                0x1b => {
+                    MemoryImmediate::parser().map(|memarg| Operator::I64AtomicStore8 { memarg })
+                }
                 0x1c => AlignedMemargParser(1).map(|memarg| Operator::I64AtomicStore16 { memarg }),
                 0x1d => AlignedMemargParser(2).map(|memarg| Operator::I64AtomicStore32 { memarg }),
                 0x1e => AlignedMemargParser(2).map(|memarg| Operator::I32AtomicRmwAdd { memarg }),
                 0x1f => AlignedMemargParser(3).map(|memarg| Operator::I64AtomicRmwAdd { memarg }),
-                0x20 => AlignedMemargParser(0).map(|memarg| Operator::I32AtomicRmw8AddU { memarg }),
+                0x20 => {
+                    MemoryImmediate::parser().map(|memarg| Operator::I32AtomicRmw8AddU { memarg })
+                }
                 0x21 => {
                     AlignedMemargParser(1).map(|memarg| Operator::I32AtomicRmw16AddU { memarg })
                 }
-                0x22 => AlignedMemargParser(0).map(|memarg| Operator::I64AtomicRmw8AddU { memarg }),
+                0x22 => {
+                    MemoryImmediate::parser().map(|memarg| Operator::I64AtomicRmw8AddU { memarg })
+                }
                 0x23 => {
                     AlignedMemargParser(1).map(|memarg| Operator::I64AtomicRmw16AddU { memarg })
                 }
@@ -486,11 +498,15 @@ mod impl_parser_hack {
                 }
                 0x25 => AlignedMemargParser(2).map(|memarg| Operator::I32AtomicRmwSub { memarg }),
                 0x26 => AlignedMemargParser(3).map(|memarg| Operator::I64AtomicRmwSub { memarg }),
-                0x27 => AlignedMemargParser(0).map(|memarg| Operator::I32AtomicRmw8SubU { memarg }),
+                0x27 => {
+                    MemoryImmediate::parser().map(|memarg| Operator::I32AtomicRmw8SubU { memarg })
+                }
                 0x28 => {
                     AlignedMemargParser(1).map(|memarg| Operator::I32AtomicRmw16SubU { memarg })
                 }
-                0x29 => AlignedMemargParser(0).map(|memarg| Operator::I64AtomicRmw8SubU { memarg }),
+                0x29 => {
+                    MemoryImmediate::parser().map(|memarg| Operator::I64AtomicRmw8SubU { memarg })
+                }
                 0x2a => {
                     AlignedMemargParser(1).map(|memarg| Operator::I64AtomicRmw16SubU { memarg })
                 }
@@ -499,11 +515,15 @@ mod impl_parser_hack {
                 }
                 0x2c => AlignedMemargParser(2).map(|memarg| Operator::I32AtomicRmwAnd { memarg }),
                 0x2d => AlignedMemargParser(3).map(|memarg| Operator::I64AtomicRmwAnd { memarg }),
-                0x2e => AlignedMemargParser(0).map(|memarg| Operator::I32AtomicRmw8AndU { memarg }),
+                0x2e => {
+                    MemoryImmediate::parser().map(|memarg| Operator::I32AtomicRmw8AndU { memarg })
+                }
                 0x2f => {
                     AlignedMemargParser(1).map(|memarg| Operator::I32AtomicRmw16AndU { memarg })
                 }
-                0x30 => AlignedMemargParser(0).map(|memarg| Operator::I64AtomicRmw8AndU { memarg }),
+                0x30 => {
+                    MemoryImmediate::parser().map(|memarg| Operator::I64AtomicRmw8AndU { memarg })
+                }
                 0x31 => {
                     AlignedMemargParser(1).map(|memarg| Operator::I64AtomicRmw16AndU { memarg })
                 }
@@ -512,18 +532,26 @@ mod impl_parser_hack {
                 }
                 0x33 => AlignedMemargParser(2).map(|memarg| Operator::I32AtomicRmwOr { memarg }),
                 0x34 => AlignedMemargParser(3).map(|memarg| Operator::I64AtomicRmwOr { memarg }),
-                0x35 => AlignedMemargParser(0).map(|memarg| Operator::I32AtomicRmw8OrU { memarg }),
+                0x35 => {
+                    MemoryImmediate::parser().map(|memarg| Operator::I32AtomicRmw8OrU { memarg })
+                }
                 0x36 => AlignedMemargParser(1).map(|memarg| Operator::I32AtomicRmw16OrU { memarg }),
-                0x37 => AlignedMemargParser(0).map(|memarg| Operator::I64AtomicRmw8OrU { memarg }),
+                0x37 => {
+                    MemoryImmediate::parser().map(|memarg| Operator::I64AtomicRmw8OrU { memarg })
+                }
                 0x38 => AlignedMemargParser(1).map(|memarg| Operator::I64AtomicRmw16OrU { memarg }),
                 0x39 => AlignedMemargParser(2).map(|memarg| Operator::I64AtomicRmw32OrU { memarg }),
                 0x3a => AlignedMemargParser(2).map(|memarg| Operator::I32AtomicRmwXor { memarg }),
                 0x3b => AlignedMemargParser(3).map(|memarg| Operator::I64AtomicRmwXor { memarg }),
-                0x3c => AlignedMemargParser(0).map(|memarg| Operator::I32AtomicRmw8XorU { memarg }),
+                0x3c => {
+                    MemoryImmediate::parser().map(|memarg| Operator::I32AtomicRmw8XorU { memarg })
+                }
                 0x3d => {
                     AlignedMemargParser(1).map(|memarg| Operator::I32AtomicRmw16XorU { memarg })
                 }
-                0x3e => AlignedMemargParser(0).map(|memarg| Operator::I64AtomicRmw8XorU { memarg }),
+                0x3e => {
+                    MemoryImmediate::parser().map(|memarg| Operator::I64AtomicRmw8XorU { memarg })
+                }
                 0x3f => {
                     AlignedMemargParser(1).map(|memarg| Operator::I64AtomicRmw16XorU { memarg })
                 }
@@ -533,13 +561,13 @@ mod impl_parser_hack {
                 0x41 => AlignedMemargParser(2).map(|memarg| Operator::I32AtomicRmwXchg { memarg }),
                 0x42 => AlignedMemargParser(3).map(|memarg| Operator::I64AtomicRmwXchg { memarg }),
                 0x43 => {
-                    AlignedMemargParser(0).map(|memarg| Operator::I32AtomicRmw8XchgU { memarg })
+                    MemoryImmediate::parser().map(|memarg| Operator::I32AtomicRmw8XchgU { memarg })
                 }
                 0x44 => {
                     AlignedMemargParser(1).map(|memarg| Operator::I32AtomicRmw16XchgU { memarg })
                 }
                 0x45 => {
-                    AlignedMemargParser(0).map(|memarg| Operator::I64AtomicRmw8XchgU { memarg })
+                    MemoryImmediate::parser().map(|memarg| Operator::I64AtomicRmw8XchgU { memarg })
                 }
                 0x46 => {
                     AlignedMemargParser(1).map(|memarg| Operator::I64AtomicRmw16XchgU { memarg })
@@ -553,15 +581,13 @@ mod impl_parser_hack {
                 0x49 => {
                     AlignedMemargParser(3).map(|memarg| Operator::I64AtomicRmwCmpxchg { memarg })
                 }
-                0x4a => {
-                    AlignedMemargParser(0).map(|memarg| Operator::I32AtomicRmw8CmpxchgU { memarg })
-                }
+                0x4a => MemoryImmediate::parser()
+                    .map(|memarg| Operator::I32AtomicRmw8CmpxchgU { memarg }),
                 0x4b => {
                     AlignedMemargParser(1).map(|memarg| Operator::I32AtomicRmw16CmpxchgU { memarg })
                 }
-                0x4c => {
-                    AlignedMemargParser(0).map(|memarg| Operator::I64AtomicRmw8CmpxchgU { memarg })
-                }
+                0x4c => MemoryImmediate::parser()
+                    .map(|memarg| Operator::I64AtomicRmw8CmpxchgU { memarg }),
                 0x4d => {
                     AlignedMemargParser(1).map(|memarg| Operator::I64AtomicRmw16CmpxchgU { memarg })
                 }
@@ -630,6 +656,7 @@ mod impl_parser_hack {
                 _ => JustResult::new(Err(ParserError::UnknownOperator)),
             }
         }
+
         #[auto_enum(derive_parse::Parser)]
         fn operator_parser(
             tag: u8,
@@ -706,6 +733,8 @@ mod impl_parser_hack {
                 0xfc => FixedReader::<u8>::new().and_then(extended_opset_parser),
                 0xfe => FixedReader::<u8>::new().and_then(atomic_parser),
 
+                // Split into sub-match to prevent `auto_enum` from making a separate type
+                // parameter for each op here
                 other => JustResult::new(match other {
                     0x00 => Ok(Operator::Unreachable),
                     0x01 => Ok(Operator::Nop),

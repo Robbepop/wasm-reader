@@ -103,6 +103,7 @@ mod tests {
                     let my_op = if let Some(op) = my_ops.next(&mut reader) {
                         op.expect(&func_name)
                     } else {
+                        wp_ops.ensure_end().unwrap();
                         continue 'func_iter;
                     };
                     let wp_op = wp_ops.read().expect(&func_name);
