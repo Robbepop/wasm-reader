@@ -8,9 +8,7 @@ mod vec;
 
 use failure::Fail;
 
-pub use operations::{
-    BrTable, BrTableTarget, FunctionBody, Ieee32, Ieee64, Operator, OperatorsReader,
-};
+pub use operations::{BrTable, FunctionBody, Ieee32, Ieee64, Operator, OperatorsReader};
 pub use parse::{Parse, ParseExt};
 pub use wasm_reader_traits::{
     IntoParser, JustResult, MaybePosition, ParseOne, ParseResult, Parser,
@@ -48,6 +46,49 @@ impl From<io::ErrorKind> for ParserError {
 #[cfg(test)]
 mod tests {
     use glob::glob;
+
+    #[test]
+    fn test_reader_helper() {
+        use crate::{ints::VarReader, vec::ManyBuilder};
+        use std::convert::TryInto;
+        use wasm_reader_traits::{Reader, ReaderBuild, ReaderBuildIter, ReaderRead};
+
+        let state: Vec<_> = vec![];
+
+        assert_eq!(
+            Reader::new(
+                (
+                    ManyBuilder::new(VarReader::<u32>::new()),
+                    VarReader::<u64>::new()
+                ),
+                state,
+            )
+            .then_iter(|state, vals| {
+                for val in vals {
+                    state.push(val?);
+                }
+                Ok(())
+            })
+            .then(|state, val| {
+                // Check that type inference works both for arguments and for the vector
+                state.push(val.try_into().unwrap());
+                Ok(())
+            })
+            .read(&mut std::io::Cursor::new(&[
+                // 2 elements...
+                0b0_0000010,
+                // First element: 1
+                0b0_0000001,
+                // Second element: 255
+                0b1_1111111,
+                0b0_0000001,
+                // Next part: 2
+                0b0_0000010
+            ]))
+            .unwrap(),
+            vec![1, 255, 2]
+        );
+    }
 
     #[test]
     fn test_cases() {

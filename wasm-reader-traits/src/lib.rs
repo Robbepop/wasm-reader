@@ -1,11 +1,18 @@
 #![cfg_attr(feature = "nightly", feature(specialization))]
 
+mod iter;
+mod reader;
+
+pub use frunk_core::hlist;
+pub use iter::{IntoParserIter, ParserIter};
+pub use reader::{Reader, ReaderBuild, ReaderBuildIter, ReaderRead};
+
 use std::{
     fmt,
     io::{self, Read, Seek},
 };
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum Error<E> {
     Error { error: E, offset: Option<u64> },
     Eof,
@@ -85,7 +92,7 @@ impl<T, E> Parser for JustResult<T, E> {
     }
 }
 
-pub trait ParseOne: Parser<Next = ()> + Sized {
+pub trait ParseOne: Parser<Next = ()> {
     fn parse<R: Read>(self, reader: &mut R) -> Result<Self::Item, Self::Error>;
 }
 

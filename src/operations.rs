@@ -1,5 +1,5 @@
 use crate::{
-    helpers::{Collect, ParserExt, ParserIter},
+    helpers::{Collect, ParserExt},
     ints::{FixedReader, VarReader},
     parse::Parse,
     vec::{Many, ManyBuilder},
@@ -7,6 +7,7 @@ use crate::{
 };
 use auto_enums::auto_enum;
 use std::{fmt, io::Read};
+use wasm_reader_traits::ParserIter;
 use wasmparser::{MemoryImmediate, Type, TypeOrFuncType};
 
 type LocalParser = Many<Collect<(VarReader<u32>, <Type as Parse>::Parser)>>;
@@ -66,28 +67,7 @@ impl fmt::Debug for BrTable {
     }
 }
 
-pub enum BrTableTarget {
-    Target { target: u32, rest: BrTable },
-    Default(u32),
-}
-
 impl BrTable {
-    pub fn next<R: Read>(self, reader: &mut R) -> Result<BrTableTarget, Error> {
-        match self.inner {
-            (Some(targets), default) => {
-                (targets, default)
-                    .next(reader)
-                    .map(|(target, rest)| BrTableTarget::Target {
-                        target,
-                        rest: BrTable { inner: rest },
-                    })
-            }
-            (None, default) => default
-                .next(reader)
-                .map(|(target, ())| BrTableTarget::Default(target)),
-        }
-    }
-
     pub fn targets_and_default<R: Read>(
         self,
         reader: &mut R,
