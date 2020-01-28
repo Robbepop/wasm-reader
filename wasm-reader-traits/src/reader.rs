@@ -15,18 +15,29 @@ pub trait ReaderRead {
     fn read<R: Read>(self, reader: R) -> Result<Self::Out, Self::Error>;
 }
 
-pub struct Reader<P, S, F = HNil> {
+pub struct Reader<P, S = (), F = HNil> {
     parsers: P,
     funcs: F,
     state: S,
 }
 
-impl<P, S> Reader<P, S> {
+impl<P> Reader<P> {
     #[inline]
-    pub fn new(parsers: P, state: S) -> Self {
+    pub fn new(parsers: P) -> Self {
         Reader {
             parsers: parsers,
             funcs: HNil,
+            state: (),
+        }
+    }
+}
+
+impl<P, S> Reader<P, S> {
+    #[inline]
+    pub fn with_state<NS>(self, state: NS) -> Reader<P, NS> {
+        Reader {
+            parsers: self.parsers,
+            funcs: self.funcs,
             state,
         }
     }

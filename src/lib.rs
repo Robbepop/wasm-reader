@@ -56,22 +56,22 @@ mod tests {
         let state: Vec<_> = vec![];
 
         assert_eq!(
-            Reader::new(
-                (
-                    ManyBuilder::new(VarReader::<u32>::new()),
-                    VarReader::<u64>::new()
-                ),
-                state,
-            )
+            Reader::new((
+                ManyBuilder::new(VarReader::<u32>::new()),
+                VarReader::<u64>::new(),
+            ))
+            .with_state(state)
             .then_iter(|state, vals| {
                 for val in vals {
                     state.push(val?);
                 }
+
                 Ok(())
             })
             .then(|state, val| {
                 // Check that type inference works both for arguments and for the vector
                 state.push(val.try_into().unwrap());
+
                 Ok(())
             })
             .read(&mut std::io::Cursor::new(&[
