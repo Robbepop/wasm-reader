@@ -1,6 +1,6 @@
 [package]
 name = "wasm-reader-traits"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Jef <jackefransham@gmail.com>"]
 edition = "2018"
 description = "Helper traits for wasm-reader (split to allow using derive macros in the main crate)"
