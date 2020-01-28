@@ -19,6 +19,12 @@ pub struct Many<T> {
 }
 
 impl<T> Many<T> {
+    pub fn new(inner: T, len: u32) -> Option<Self> {
+        NonZeroU32::new(len).map(|len| Many { len, inner })
+    }
+}
+
+impl<T> Many<T> {
     pub fn len(&self) -> u32 {
         self.len.get()
     }
@@ -35,13 +41,7 @@ where
     #[inline]
     fn next<R: Read>(self, reader: &mut R) -> ParseResult<Self::Item, Self::Next, Self::Error> {
         match VarReader::<u32>::new().next(reader) {
-            Ok((len, ())) => Ok((
-                NonZeroU32::new(len).map(|len| Many {
-                    len,
-                    inner: self.inner,
-                }),
-                (),
-            )),
+            Ok((len, ())) => Ok((Many::new(self.inner, len), ())),
             Err(e) => Err(e),
         }
     }

@@ -147,6 +147,7 @@ mod tests {
                         wp_ops.ensure_end().unwrap();
                         continue 'func_iter;
                     };
+
                     let wp_op = wp_ops.read().expect(&func_name);
 
                     match (my_op, wp_op) {
@@ -167,8 +168,8 @@ mod tests {
                             WP::Br {
                                 relative_depth: wp_relative_depth,
                             },
-                        ) => assert_eq!(wr_relative_depth, wp_relative_depth, "{}", func_name),
-                        (
+                        )
+                        | (
                             WR::BrIf {
                                 relative_depth: wr_relative_depth,
                             },
@@ -176,6 +177,7 @@ mod tests {
                                 relative_depth: wp_relative_depth,
                             },
                         ) => assert_eq!(wr_relative_depth, wp_relative_depth, "{}", func_name),
+
                         (WR::BrTable { table: wr_table }, WP::BrTable { table: wp_table }) => {
                             use crate::ParseOne as _;
 
@@ -197,7 +199,9 @@ mod tests {
                             );
                             assert_eq!(wr_table_default, wp_table_default, "{}", func_name);
                         }
+
                         (WR::Return, WP::Return) => {}
+
                         (
                             WR::Call {
                                 function_index: wr_function_index,
@@ -206,6 +210,7 @@ mod tests {
                                 function_index: wp_function_index,
                             },
                         ) => assert_eq!(wr_function_index, wp_function_index, "{}", func_name),
+
                         (
                             WR::CallIndirect {
                                 index: wr_index,
@@ -219,6 +224,7 @@ mod tests {
                             assert_eq!(wr_index, wp_index, "{}", func_name);
                             assert_eq!(wr_table_index, wp_table_index, "{}", func_name);
                         }
+
                         (WR::Drop, WP::Drop) => {}
                         (WR::Select, WP::Select) => {}
 
@@ -368,8 +374,8 @@ mod tests {
                             WP::MemorySize {
                                 reserved: wp_reserved,
                             },
-                        ) => assert_eq!(wr_reserved, wp_reserved, "{}", func_name),
-                        (
+                        )
+                        | (
                             WR::MemoryGrow {
                                 reserved: wr_reserved,
                             },
@@ -377,6 +383,7 @@ mod tests {
                                 reserved: wp_reserved,
                             },
                         ) => assert_eq!(wr_reserved, wp_reserved, "{}", func_name),
+
                         (WR::I32Const { value: wr_value }, WP::I32Const { value: wp_value }) => {
                             assert_eq!(wr_value, wp_value, "{}", func_name)
                         }
